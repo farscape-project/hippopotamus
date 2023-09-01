@@ -31,7 +31,7 @@ StokesField::StokesField(const InputParameters & parameters)
     _p_phi(_assembly.phi(_p_var)),
     _div_test(_var.divPhi()),
     _div_phi(_assembly.divPhi(_var)),
-    _div_u(_is_implicit ? _var.divSln() : _var.divSlnOld()),
+    _div_v(_is_implicit ? _var.divSln() : _var.divSlnOld()),
     _coeff(getParam<Real>("coeff")),
     _p_var_num(coupled("p"))
 {
@@ -40,12 +40,21 @@ StokesField::StokesField(const InputParameters & parameters)
 Real
 StokesField::computeQpResidual()
 {
+  //std::cout << "div_test = " << _div_test[_i][_qp] << std::endl;
+  // std::cout << "_test = " << _test[_i][_qp](0) << " " << _test[_i][_qp](1) << " " << _test[_i][_qp](2) << " " << std::endl;
+ 
+  // if(_qp == 0)
+  //   std::cout << _i << std::endl;
+  // std::cout << " u = " << _u[_qp](0) << "  " << _u[_qp](1) << std::endl;
+  // std::cout << " p = " << _p[_qp] << std::endl;
   return _coeff * _u[_qp] * _test[_i][_qp] - _p[_qp] * _div_test[_i][_qp];
 }
 
 Real
 StokesField::computeQpJacobian()
 {
+  //std::cout << "div_phi = " << _div_phi[_j][_qp] << std::endl;
+  // std::cout << "_phi = " << _phi[_j][_qp](0) << " " << _phi[_j][_qp](1) << " " << _phi[_j][_qp](2) << " " << std::endl;
   return _coeff * _phi[_j][_qp] * _test[_i][_qp];
 }
 

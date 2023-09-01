@@ -42,7 +42,7 @@ protected:
   const VectorVariablePhiDivergence & _div_phi;
 
   /// Holds the solution dic at the current quadrature points
-  const VectorVariableDivergence & _div_u;
+  const VectorVariableDivergence & _div_v;
 
   /// Scalar coefficient
   Real _coeff;

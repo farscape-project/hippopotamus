@@ -30,7 +30,7 @@ DivergenceField::DivergenceField(const InputParameters & parameters)
     _v_var(*getVectorVar("v", 0)),
     _div_test(_v_var.divPhi()),
     _div_phi(_assembly.divPhi(_v_var)),
-    _div_u(_is_implicit ? _v_var.divSln() : _v_var.divSlnOld()),
+    _div_v(_is_implicit ? _v_var.divSln() : _v_var.divSlnOld()),
     _v_var_num(coupled("v"))
 {
 }
@@ -38,7 +38,10 @@ DivergenceField::DivergenceField(const InputParameters & parameters)
 Real
 DivergenceField::computeQpResidual()
 {
-  return -_div_u[_qp] * _test[_i][_qp] + _function.value(_t, _q_point[_qp]) * _test[_i][_qp];
+  //std::cout << _function.value(_t, _q_point[_qp]) << std::endl;
+  if(_qp == 0)
+  std::cout << "div_v = " << _div_v[_qp] << std::endl;
+  return -_div_v[_qp] * _test[_i][_qp] + _function.value(_t, _q_point[_qp]) * _test[_i][_qp];
 }
 
 Real
@@ -50,6 +53,7 @@ DivergenceField::computeQpJacobian()
 Real
 DivergenceField::computeQpOffDiagJacobian(unsigned int jvar)
 {
+   // std::cout << "div_phi = " << _div_phi[_j][_qp] << std::endl;
   if (_v_var_num == jvar) 
     return  -_div_phi[_j][_qp] * _test[_i][_qp];
   

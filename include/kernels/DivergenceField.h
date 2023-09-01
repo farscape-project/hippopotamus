@@ -29,7 +29,7 @@ protected:
 
   /// Function coefficient
   const Function & _function;
-  
+
   VectorMooseVariable & _v_var;
 
   /// div of the test function
@@ -39,7 +39,7 @@ protected:
   const VectorVariablePhiDivergence & _div_phi;
 
   /// Holds the solution dic at the current quadrature points
-  const VectorVariableDivergence & _div_u;
+  const VectorVariableDivergence & _div_v;
 
   unsigned int _v_var_num;
 };
