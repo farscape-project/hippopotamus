@@ -2,14 +2,17 @@
 [Mesh]
   [gmg]
     type = GeneratedMeshGenerator
-    dim = 2
-    nx = 10
-    ny = 10
+    dim = 3
+    nx = 6
+    ny = 6
+    nz = 6
     xmax =  1
     ymax =  1
+    zmax =  1
     xmin = -1
     ymin = -1
-    elem_type = TRI6
+    zmin = -1
+    elem_type = HEX27
   []
 []
 
@@ -45,8 +48,7 @@
   # directly in the input file
   [./forcing_func]
     type = ParsedFunction
- #   expression = '.5*pi*.5*pi*cos(.5*pi*x)*cos(.5*pi*y) + .5*pi*.5*pi*cos(.5*pi*x)*cos(.5*pi*y)'
-     expression = '.5*pi*.5*pi*cos(.5*pi*x)*sin(.5*pi*y) + .5*pi*.5*pi*cos(.5*pi*x)*sin(.5*pi*y)'
+     expression = '3.0*.5*pi*.5*pi*cos(.5*pi*x)*sin(.5*pi*y)*cos(.5*pi*z)'
     symbol_names = 'alpha'
     symbol_values = '1'
   [../]
@@ -58,10 +60,9 @@
   [sides]
     type = VectorDivergencePenaltyDirichletBC
     variable = u
-  #  function_x = '.5*pi*sin(.5*pi*x)*cos(.5*pi*y)'
-  #  function_y = '.5*pi*cos(.5*pi*x)*sin(.5*pi*y)'
-    function_x = '.5*pi*sin(.5*pi*x)*sin(.5*pi*y)'
-    function_y = '-.5*pi*cos(.5*pi*x)*cos(.5*pi*y)'
+    function_x = '.5*pi*sin(.5*pi*x)*sin(.5*pi*y)*cos(.5*pi*z)'
+    function_y = '-.5*pi*cos(.5*pi*x)*cos(.5*pi*y)*cos(.5*pi*z)'
+    function_z = ' .5*pi*cos(.5*pi*x)*sin(.5*pi*y)*sin(.5*pi*z)'
     penalty = 1e10
     boundary = 'left right top bottom'
   []

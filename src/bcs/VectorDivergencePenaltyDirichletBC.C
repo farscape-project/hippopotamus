@@ -46,7 +46,7 @@ VectorDivergencePenaltyDirichletBC::computeQpResidual()
     u_exact = {_function_x.value(_t, _q_point[_qp]),
                _function_y.value(_t, _q_point[_qp]),
                _function_z.value(_t, _q_point[_qp])};
-  //RealVectorValue Ncu = (_u[_qp] - u_exact) * (_normals[_qp]);
+
   return _penalty * ((_u[_qp] - u_exact) * (_normals[_qp])) * ((_test[_i][_qp]) * (_normals[_qp]));
 }
 
