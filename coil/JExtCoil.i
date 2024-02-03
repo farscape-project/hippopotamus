@@ -60,7 +60,7 @@
   [conductivity]          
     type = ADGenericConstantMaterial    
     prop_names = electrical_conductivity
-    prop_values = 1.0
+    prop_values = 6e7
   []
 []
 

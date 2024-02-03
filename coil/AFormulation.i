@@ -26,17 +26,32 @@
     variable = A
   []
 
-  [curl_curl]
+  [curl_curl_target]
     type = CurlCurlField
     variable = A
-    coeff = 1.0
+    coeff = 0.1612903225e-7
+    block = target
+  []
+
+  [curl_curl_coil]
+    type = CurlCurlField
+    variable = A
+    coeff = 0.1612903225e-7
+    block = coil
+  []
+
+  [curl_curl_air]
+    type = CurlCurlField
+    variable = A
+    coeff = 15915.4950873
+    block = vacuum_region
   []
 
   [Jext]
     type = CoupledJExt
     variable = A
     Jext = J
-    coeff = 1.0
+    coeff = 0.1612903225e-7
   []
 
 []
