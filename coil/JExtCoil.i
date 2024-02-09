@@ -1,11 +1,15 @@
 [Mesh]
-  type = FileMesh
-  file = vac_meshed_oval_coil_and_solid_target.e
+  [fmg]
+    type = FileMeshGenerator
+    file = vac_meshed_oval_coil_and_solid_target.e
+  []
   second_order = true
 []
 
 [Variables]
   [V]
+  []
+  [D]
   []
 []
 
@@ -16,7 +20,6 @@
   []
 []
 
-
 [Kernels]
   [diff]
     type = Diffusion
@@ -25,15 +28,14 @@
   []
   [null]
     type = NullKernel
-    variable = V
+    variable = D
     block = 'target vacuum_region'
   []
 []
 
-
 [AuxKernels]
   [current_density]
-    type = ADCurrentDensity
+    type = CurrentDensity
     variable = J
     potential = V
     block = coil
@@ -57,19 +59,21 @@
 []
 
 [Materials]
-  [conductivity]          
-    type = ADGenericConstantMaterial    
+  [copper]
+    type = GenericConstantMaterial
     prop_names = electrical_conductivity
-    prop_values = 6e7
+    prop_values = 1
   []
 []
 
-
 [Executioner]
   type = Transient
-  solve_type = 'NEWTON'
-  petsc_options_iname = '-pc_type -pc_hypre_type'
-  petsc_options_value = 'hypre boomeramg'
+  solve_type = LINEAR
+  petsc_options_iname = '-pc_type -ksp_atol -ksp_rtol'
+  petsc_options_value = 'hypre 1e-12 1e-20'
+  #start_time = 0.0
+  #dt = 0.05
+  #end_time = 0.5
   num_steps = 1
 []
 

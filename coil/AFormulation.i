@@ -1,6 +1,8 @@
 [Mesh]
-  type = FileMesh
-  file = vac_meshed_oval_coil_and_solid_target.e
+  [fmg]
+    type = FileMeshGenerator
+    file = vac_meshed_oval_coil_and_solid_target.e
+  []
   second_order = true
 []
 
@@ -18,74 +20,70 @@
   []
 []
 
-
+# Electrical conductivity/resistivity from
+# https://en.wikipedia.org/wiki/Electrical_resistivity_and_conductivity
 [Kernels]
-
+  [curl_curl]
+    type = CurlCurlField
+    variable = A
+    coeff = 1
+  []
+  #[curl_curl_target]
+  #  variable = A
+  #  type = CurlCurlField
+  #  coeff = 1
+  #  block = target
+  #[]
+  #[curl_curl_coil]
+  #  type = CurlCurlField
+  #  variable = A
+  #  coeff = 1
+  #  block = coil
+  #[]
+  #[curl_curl_air]
+  #  type = CurlCurlField
+  #  variable = A
+  #  coeff = 1e9
+  #  block = vacuum_region
+  #[]
+#------------------------------
   [timederivative]
     type = VectorTimeDerivative
     variable = A
   []
-
-  [curl_curl_target]
-    type = CurlCurlField
-    variable = A
-    coeff = 0.1612903225e-7
-    block = target
-  []
-
-  [curl_curl_coil]
-    type = CurlCurlField
-    variable = A
-    coeff = 0.1612903225e-7
-    block = coil
-  []
-
-  [curl_curl_air]
-    type = CurlCurlField
-    variable = A
-    coeff = 15915.4950873
-    block = vacuum_region
-  []
-
+#------------------------------
   [Jext]
     type = CoupledJExt
     variable = A
     Jext = J
-    coeff = 0.1612903225e-7
+    coeff = 1
   []
-
 []
-
-
 
 [Executioner]
   type = Transient
-  solve_type = 'NEWTON'
-  petsc_options_iname = '-pc_type -pc_hypre_type'
-  petsc_options_value = 'hypre boomeramg'
+  solve_type = LINEAR
+  petsc_options_iname = '-pc_type -ksp_atol -ksp_rtol'
+  petsc_options_value = 'lu 1e-12 1e-20'
   start_time = 0.0
   end_time = 0.5
   dt = 0.05
-  
 []
 
 [Outputs]
   exodus = true
 []
 
-
-
 [MultiApps]
   [sub_app]
     type = TransientMultiApp
     positions = '0 0 0'
-    input_files = 'JExtCoil.i'
+    input_files = JExtCoil.i
     execute_on = timestep_begin
   []
 []
 
 [Transfers]
-
   [pull_jext]
     type = MultiAppCopyTransfer
 
@@ -99,4 +97,3 @@
     variable = J
   []
 []
-
