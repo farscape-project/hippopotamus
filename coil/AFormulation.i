@@ -22,6 +22,10 @@
     family = NEDELEC_ONE
     order = FIRST
   []
+  [E]
+    family = NEDELEC_ONE
+    order = FIRST
+  []
 []
 
 # Electrical conductivity/resistivity from
@@ -64,6 +68,25 @@
     u = A
   []
 []
+
+
+[AuxKernels]
+  [electric_field]
+    type = VectorTimeDerivativeAux
+    variable = E
+    magnetic_vector_potential = A
+    execute_on = timestep_end
+  []
+[]
+
+[Materials]
+  [copper]
+    type = GenericConstantMaterial
+    prop_names = electrical_conductivity
+    prop_values = 1
+  []
+[]
+
 
 [BCs]
   [plane]

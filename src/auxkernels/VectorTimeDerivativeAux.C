@@ -9,7 +9,7 @@
 
 #include "VectorTimeDerivativeAux.h"
 
-registerMooseObject("HippopotamusApp", VectorTimeDerivativeAux);
+registerMooseObject("hippopotamusApp", VectorTimeDerivativeAux);
 
 
 InputParameters
