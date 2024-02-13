@@ -15,6 +15,10 @@
     family = NEDELEC_ONE
     order = FIRST
   []
+  [j]
+    family = NEDELEC_ONE
+    order = FIRST
+  []
 []
 
 [AuxVariables]
@@ -25,6 +29,10 @@
   [E]
     family = NEDELEC_ONE
     order = FIRST
+  []
+  [P]
+    family = MONOMIAL
+    order = CONSTANT
   []
 []
 
@@ -46,7 +54,7 @@
   [curl_curl_air]
     type = CurlCurlField
     variable = A
-    coeff = 1e8
+    coeff = 1
     block = vacuum_region
   []
 #------------------------------
@@ -67,14 +75,30 @@
     variable = B
     u = A
   []
+#------------------------------
+  [j]
+    type = CurlProjection
+    variable = j
+    u = B
+  []
 []
 
 
 [AuxKernels]
+active = 'joule_heating'
   [electric_field]
     type = VectorTimeDerivativeAux
     variable = E
     magnetic_vector_potential = A
+    block = target
+    execute_on = timestep_end
+  []
+
+  [joule_heating]
+    type = JouleHeatingAux
+    variable = P
+    electric_field = j
+    block = target
     execute_on = timestep_end
   []
 []
