@@ -11,6 +11,10 @@
     family = NEDELEC_ONE
     order = FIRST
   []
+  [B]
+    family = NEDELEC_ONE
+    order = FIRST
+  []
 []
 
 [AuxVariables]
@@ -23,29 +27,24 @@
 # Electrical conductivity/resistivity from
 # https://en.wikipedia.org/wiki/Electrical_resistivity_and_conductivity
 [Kernels]
-  [curl_curl]
+  [curl_curl_coil]
     type = CurlCurlField
     variable = A
     coeff = 1
+    block = coil
   []
-  #[curl_curl_target]
-  #  variable = A
-  #  type = CurlCurlField
-  #  coeff = 1
-  #  block = target
-  #[]
-  #[curl_curl_coil]
-  #  type = CurlCurlField
-  #  variable = A
-  #  coeff = 1
-  #  block = coil
-  #[]
-  #[curl_curl_air]
-  #  type = CurlCurlField
-  #  variable = A
-  #  coeff = 1e9
-  #  block = vacuum_region
-  #[]
+  [curl_curl_target]
+    variable = A
+    type = CurlCurlField
+    coeff = 1
+    block = target
+  []
+  [curl_curl_air]
+    type = CurlCurlField
+    variable = A
+    coeff = 1e8
+    block = vacuum_region
+  []
 #------------------------------
   [timederivative]
     type = VectorTimeDerivative
@@ -58,6 +57,21 @@
     Jext = J
     coeff = 1
   []
+#------------------------------
+  [B]
+    type = CurlProjection
+    variable = B
+    u = A
+  []
+[]
+
+[BCs]
+  [plane]
+    type = VectorCurlPenaltyDirichletBC
+    variable = A
+    boundary = 'terminal_face coil_in coil_out'
+    penalty = 1e8
+  []
 []
 
 [Executioner]
@@ -66,8 +80,8 @@
   petsc_options_iname = '-pc_type -ksp_atol -ksp_rtol'
   petsc_options_value = 'lu 1e-12 1e-20'
   start_time = 0.0
-  end_time = 0.5
-  dt = 0.05
+  end_time = 0.2
+  dt = 0.01
 []
 
 [Outputs]
