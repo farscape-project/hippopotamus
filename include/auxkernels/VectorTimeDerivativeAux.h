@@ -26,6 +26,12 @@ protected:
   /// Vector variable of electric field (calculated using full electromagnetic description)
   const VectorVariableValue & _magnetic_vector_potential_dot;
 
+  const VectorVariableValue & _magnetic_vector_potential;
+
+  VectorMooseVariable & _mv_var;
+
+  const VectorVariableValue & _magnetic_vector_potential_old;
+
   /// Electrical conductivity (in S/m)
   const GenericMaterialProperty<Real,false> & _conductivity;
 };

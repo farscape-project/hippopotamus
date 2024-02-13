@@ -26,6 +26,9 @@ VectorTimeDerivativeAux::validParams()
 VectorTimeDerivativeAux::VectorTimeDerivativeAux(const InputParameters & parameters)
   : VectorAuxKernel(parameters),
     _magnetic_vector_potential_dot(coupledVectorDot("magnetic_vector_potential")),
+    _magnetic_vector_potential(coupledVectorValue("magnetic_vector_potential")),
+    _mv_var(*getVectorVar("magnetic_vector_potential", 0)),
+    _magnetic_vector_potential_old(_mv_var.slnOld()),
     _conductivity(getGenericMaterialProperty<Real,false>("electrical_conductivity"))   
 {
  
@@ -35,7 +38,8 @@ VectorTimeDerivativeAux::VectorTimeDerivativeAux(const InputParameters & paramet
 RealVectorValue
 VectorTimeDerivativeAux::computeValue()
 {
-    return -_conductivity[_qp] * _magnetic_vector_potential_dot[_qp];
+   //std::cout << _magnetic_vector_potential[_qp]  << "  " << _magnetic_vector_potential_old[_qp]  << std::endl;
+   return -_conductivity[_qp] * (_magnetic_vector_potential[_qp] - _magnetic_vector_potential_old[_qp])/_dt;
 }
 
 
