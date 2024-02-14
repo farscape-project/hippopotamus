@@ -50,7 +50,7 @@
     type = FunctionDirichletBC
     variable = V
     boundary = coil_in
-    function = 5*cos(2*pi/.5*t)
+    function = 5*(1-cos(2*pi/.5*t))
   []
 []
 
