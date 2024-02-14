@@ -1,15 +1,11 @@
 [Mesh]
-  [fmg]
-    type = FileMeshGenerator
-    file = vac_meshed_oval_coil_and_solid_target.e
-  []
+  type = FileMesh
+  file = vac_meshed_oval_coil_and_solid_target.e
   second_order = true
 []
 
 [Variables]
   [V]
-  []
-  [D]
   []
 []
 
@@ -28,7 +24,7 @@
   []
   [null]
     type = NullKernel
-    variable = D
+    variable = V
     block = 'target vacuum_region'
   []
 []
@@ -69,14 +65,7 @@
 [Executioner]
   type = Transient
   solve_type = LINEAR
-  petsc_options_iname = '-pc_type -ksp_atol -ksp_rtol'
-  petsc_options_value = 'hypre 1e-12 1e-20'
-  #start_time = 0.0
-  #dt = 0.05
-  #end_time = 0.5
+  petsc_options_iname = -pc_type
+  petsc_options_value = lu
   num_steps = 1
-[]
-
-[Outputs]
-  exodus = true
 []

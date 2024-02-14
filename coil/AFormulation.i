@@ -1,8 +1,6 @@
 [Mesh]
-  [fmg]
-    type = FileMeshGenerator
-    file = vac_meshed_oval_coil_and_solid_target.e
-  []
+  type = FileMesh
+  file = vac_meshed_oval_coil_and_solid_target.e
   second_order = true
 []
 
@@ -15,14 +13,14 @@
     family = NEDELEC_ONE
     order = FIRST
   []
-  [j]
+  [J]
     family = NEDELEC_ONE
     order = FIRST
   []
 []
 
 [AuxVariables]
-  [J]
+  [Jext]
     family = NEDELEC_ONE
     order = FIRST
   []
@@ -39,17 +37,11 @@
 # Electrical conductivity/resistivity from
 # https://en.wikipedia.org/wiki/Electrical_resistivity_and_conductivity
 [Kernels]
-  [curl_curl_coil]
+  [curl_curl_conductors]
     type = CurlCurlField
     variable = A
     coeff = 1
-    block = coil
-  []
-  [curl_curl_target]
-    variable = A
-    type = CurlCurlField
-    coeff = 1
-    block = target
+    block = 'coil target'
   []
   [curl_curl_air]
     type = CurlCurlField
@@ -66,8 +58,9 @@
   [Jext]
     type = CoupledJExt
     variable = A
-    Jext = J
+    Jext = Jext
     coeff = 1
+    block = coil
   []
 #------------------------------
   [B]
@@ -76,16 +69,15 @@
     u = A
   []
 #------------------------------
-  [j]
+  [J]
     type = CurlProjection
-    variable = j
+    variable = J
     u = B
   []
 []
 
-
 [AuxKernels]
-active = 'joule_heating'
+  active = joule_heating
   [electric_field]
     type = VectorTimeDerivativeAux
     variable = E
@@ -93,11 +85,10 @@ active = 'joule_heating'
     block = target
     execute_on = timestep_end
   []
-
   [joule_heating]
     type = JouleHeatingAux
     variable = P
-    electric_field = j
+    electric_field = J
     block = target
     execute_on = timestep_end
   []
@@ -110,7 +101,6 @@ active = 'joule_heating'
     prop_values = 1
   []
 []
-
 
 [BCs]
   [plane]
@@ -127,7 +117,7 @@ active = 'joule_heating'
   petsc_options_iname = '-pc_type -ksp_atol -ksp_rtol'
   petsc_options_value = 'lu 1e-12 1e-20'
   start_time = 0.0
-  end_time = 0.2
+  end_time = 0.5
   dt = 0.01
 []
 
@@ -138,8 +128,7 @@ active = 'joule_heating'
 [MultiApps]
   [sub_app]
     type = TransientMultiApp
-    positions = '0 0 0'
-    input_files = JExtCoil.i
+    input_files = Jext.i
     execute_on = timestep_begin
   []
 []
@@ -155,6 +144,6 @@ active = 'joule_heating'
     source_variable = J
 
     # The name of the auxiliary variable in this app
-    variable = J
+    variable = Jext
   []
 []
