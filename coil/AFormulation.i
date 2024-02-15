@@ -16,9 +16,7 @@
 []
 
 [AuxVariables]
-  [Jext]
-    family = NEDELEC_ONE
-    order = FIRST
+  [V]
   []
   [E]
     family = NEDELEC_ONE
@@ -51,10 +49,10 @@
     variable = A
   []
 #------------------------------
-  [Jext]
-    type = CoupledJExt
+  [V]
+    type = CoupledVExt
     variable = A
-    Jext = Jext
+    coupled_scalar_variable = V
     coeff = 1
     block = coil
   []
@@ -128,9 +126,9 @@
     from_multi_app = sub_app
 
     # The name of the variable in the sub-app
-    source_variable = J
+    source_variable = V
 
     # The name of the auxiliary variable in this app
-    variable = Jext
+    variable = V
   []
 []
