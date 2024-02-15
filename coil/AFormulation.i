@@ -13,10 +13,6 @@
     family = NEDELEC_ONE
     order = FIRST
   []
-  [J]
-    family = NEDELEC_ONE
-    order = FIRST
-  []
 []
 
 [AuxVariables]
@@ -68,28 +64,19 @@
     variable = B
     u = A
   []
-#------------------------------
-  [J]
-    type = CurlProjection
-    variable = J
-    u = B
-  []
 []
 
 [AuxKernels]
-  active = joule_heating
   [electric_field]
     type = VectorTimeDerivativeAux
     variable = E
     magnetic_vector_potential = A
-    block = target
     execute_on = timestep_end
   []
   [joule_heating]
     type = JouleHeatingAux
     variable = P
-    electric_field = J
-    block = target
+    electric_field = E
     execute_on = timestep_end
   []
 []
