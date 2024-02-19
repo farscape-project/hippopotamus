@@ -23,12 +23,14 @@ public:
 
 protected:
   virtual Real computeQpResidual() override;
+  virtual Real computeQpOffDiagJacobian(unsigned jvar) override;
 
   /// coupled scalar variable
   MooseVariable & _p_var;
   unsigned int _p_var_num;
 
   const VariableGradient & _grad_p;
+  const VariablePhiGradient & _grad_phi;
 
   /// scalar coefficient
   Real _coeff;

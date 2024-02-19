@@ -28,6 +28,7 @@ CoupledVExt::CoupledVExt(const InputParameters & parameters)
     _p_var(*getVar("coupled_scalar_variable", 0)),
     _p_var_num(coupled("coupled_scalar_variable")),
     _grad_p(coupledGradient("coupled_scalar_variable")),
+    _grad_phi(_assembly.gradPhi(_p_var)),
     _coeff(getParam<Real>("coeff"))
 {
 }
@@ -36,4 +37,13 @@ Real
 CoupledVExt::computeQpResidual()
 {
   return _coeff * _grad_p[_qp] * _test[_i][_qp];
+}
+
+Real
+CoupledVExt::computeQpOffDiagJacobian(unsigned jvar)
+{
+  if( _p_var_num  == jvar)
+    return _coeff * _grad_phi[_j][_qp] * _test[_i][_qp];
+
+  return 0.0;
 }
