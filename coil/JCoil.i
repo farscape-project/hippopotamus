@@ -81,14 +81,7 @@
   solve_type = LINEAR
   petsc_options_iname = -pc_type
   petsc_options_value = none
-  #num_steps = 1
-  start_time = 0.0
-  end_time = 0.5
-  dt = 0.05
-[]
-
-[Outputs]
-  exodus = true
+  num_steps = 1
 []
 
 [MultiApps]

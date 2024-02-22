@@ -1,7 +1,6 @@
 [Mesh]
   type = FileMesh
-  file = vac_meshed_oval_coil_and_solid_target.e
-  second_order = true
+  file = tet14_vac_meshed_oval_coil_and_solid_target.e
 []
 
 [Variables]
@@ -9,16 +8,15 @@
     family = NEDELEC_ONE
     order = FIRST
   []
-  [B]
-    family = NEDELEC_ONE
-    order = FIRST
-  []
 []
 
 [AuxVariables]
   [J]
-    family = NEDELEC_ONE
+    family = RAVIART_THOMAS
     order = FIRST
+  []
+  [V]
+    order = SECOND
   []
   [E]
     family = NEDELEC_ONE
@@ -57,12 +55,6 @@
     Jext = J
     coeff = 1
     block = coil
-  []
-#------------------------------
-  [B]
-    type = CurlProjection
-    variable = B
-    u = A
   []
 []
 
@@ -104,7 +96,7 @@
   petsc_options_iname = '-pc_type -ksp_atol -ksp_rtol'
   petsc_options_value = 'lu 1e-12 1e-20'
   start_time = 0.0
-  end_time = 0.5
+  end_time = 0.25
   dt = 0.01
 []
 
@@ -113,24 +105,36 @@
 []
 
 [MultiApps]
-  [sub_app]
+  [JCoil]
     type = TransientMultiApp
-    input_files = Jext.i
+    input_files = JCoil.i
     execute_on = timestep_begin
   []
 []
 
 [Transfers]
-  [pull_jext]
+  [pull_current]
     type = MultiAppCopyTransfer
 
     # Transfer from the sub-app to this app
-    from_multi_app = sub_app
+    from_multi_app = JCoil
 
     # The name of the variable in the sub-app
     source_variable = J
 
     # The name of the auxiliary variable in this app
     variable = J
+  []
+  [pull_potential]
+    type = MultiAppCopyTransfer
+
+    # Transfer from the sub-app to this app
+    from_multi_app = JCoil
+
+    # The name of the variable in the sub-app
+    source_variable = V
+
+    # The name of the auxiliary variable in this app
+    variable = V
   []
 []
